@@ -9,12 +9,25 @@ namespace GuessNumber
 {
     class Class1
     {
+
+        public static int Input(string input)
+        {
+            int number = 0;
+            int.TryParse(input, out number);
+            while (number == 0)
+            {
+                Console.WriteLine("You've entered invalid data, please enter valid one");
+                int.TryParse(Console.ReadLine(), out number);
+            }
+            return number;
+        }
+
+
         static void comStep(int minVal, int maxVal, int avVal)
         {
-            string answer;
             avVal = (minVal + maxVal) / 2;
             Console.WriteLine("Your number is " + avVal + "?");
-            answer = Console.ReadLine();
+            string answer = Console.ReadLine();
             if (answer == "+")
             {
                 minVal = avVal;
@@ -31,39 +44,41 @@ namespace GuessNumber
             }
 
         }
+        
+        
         static void humStep(int randomNumber)
         {
-            int guess = 0;
-            guess = int.Parse(Console.ReadLine());
+            int guess = Input(Console.ReadLine());
             while (guess != randomNumber)
             {
                 if (guess > randomNumber)
                 {
                     Console.WriteLine("Your guess is greater, try once more");
-                    guess = int.Parse(Console.ReadLine());
+                    guess = Input(Console.ReadLine());
                 }
                 else
                 {
                     Console.WriteLine("Your guess is less, try once more");
-                    guess = int.Parse(Console.ReadLine());
+                    guess = Input(Console.ReadLine());
                 }
             }
             Console.WriteLine("You are correct!");
         }
+        
+        
         static void Main(string[] args)
         {
-            bool gameType;
-            Console.WriteLine("Hello! Welcome to 'Guess number' program. Do you want to guess number yourself? (true/false)");
-            gameType = bool.Parse(Console.ReadLine());
+            Console.WriteLine("Hello! Welcome to 'Guess number' program. Enter any number if you want to guess yourself or type anything else if you want computer to guess");
             int maxVal = 0;
+            bool gameType = int.TryParse(Console.ReadLine(), out maxVal);
             Console.WriteLine("Please enter the desired range");
-            maxVal = int.Parse(Console.ReadLine());
+            maxVal = Input(Console.ReadLine());
 
             if (gameType == false)
             {
                 int minVal = 0;
                 int avVal = 0;
-                Console.WriteLine("'+' if number is greater than guess, '-' if less, and the other input will be considirer as computer being correct");
+                Console.WriteLine("'+' if number is greater than guess, '-' if less, any other input will be considirer as computer being correct");
                 comStep(minVal, maxVal, avVal);
             }
             else

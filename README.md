@@ -1,2 +1,1 @@
-GuessNumber
-===========
+Guess the number once more

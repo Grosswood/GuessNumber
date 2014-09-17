@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,20 +50,29 @@ namespace GuessNumber
         static void humStep(int randomNumber)
         {
             int guess = Input(Console.ReadLine());
+            int attempts = 1;
             while (guess != randomNumber)
             {
                 if (guess > randomNumber)
                 {
                     Console.WriteLine("Your guess is greater, try once more");
                     guess = Input(Console.ReadLine());
+                    attempts++;
                 }
                 else
                 {
                     Console.WriteLine("Your guess is less, try once more");
                     guess = Input(Console.ReadLine());
+                    attempts++;
                 }
             }
-            Console.WriteLine("You are correct!");
+            Console.WriteLine("You are correct! Please enter your initials for the table of records");
+            using (StreamWriter writer = new StreamWriter(@"c:\temp\GuessNumberByHuman.txt", true))
+            {
+                writer.Write(Console.ReadLine());
+                writer.Write(" ");
+                writer.WriteLine(attempts);
+            }
         }
         
         

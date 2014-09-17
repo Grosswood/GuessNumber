@@ -12,6 +12,7 @@ namespace GuessNumber
     {
 
         public static int Input(string input)
+//Check if input is integer, otherwise asks to enter data once more
         {
             int number = 0;
             int.TryParse(input, out number);
@@ -23,8 +24,8 @@ namespace GuessNumber
             return number;
         }
 
-
         static void fromToText(int attempts)
+//Interacting with txt file: first writes current result, then sorts table's content and shows sorted version
         {
             Console.WriteLine("You are correct! Please enter your initials or name for the table of records");
             using (StreamWriter writer = new StreamWriter(@"c:\temp\GuessNumberByHuman.txt", true))
@@ -43,6 +44,7 @@ namespace GuessNumber
         }
         
         static void comStep(int minVal, int maxVal, int avVal)
+//One step for guessing AI
         {
             avVal = (minVal + maxVal) / 2;
             Console.WriteLine("Your number is " + avVal + "?");
@@ -66,6 +68,7 @@ namespace GuessNumber
         
         
         static void humStep(int randomNumber, int attempts)
+//User is guessing, at the end calls to interaction with text
         {
             int guess = Input(Console.ReadLine());
             attempts--;
@@ -90,6 +93,7 @@ namespace GuessNumber
         
         static void Main(string[] args)
         {
+//Managing settings
             Console.WriteLine("Hello! Welcome to 'Guess number' program. Enter any number if you want to guess yourself or type anything else if you want computer to guess");
             int maxVal = 0;
             bool gameType = int.TryParse(Console.ReadLine(), out maxVal);
@@ -97,6 +101,7 @@ namespace GuessNumber
             maxVal = Input(Console.ReadLine());
 
             if (gameType == false)
+//AI is guessing
             {
                 int minVal = 0;
                 int avVal = 0;
@@ -104,6 +109,7 @@ namespace GuessNumber
                 comStep(minVal, maxVal, avVal);
             }
             else
+//User's guessing, "attempts" shows how many iteraction is required for computer to complete the task
             {
                 int attempts = 0;
                 while (Math.Pow(2,attempts) < maxVal)

@@ -24,6 +24,24 @@ namespace GuessNumber
         }
 
 
+        static void fromToText(int attempts)
+        {
+            Console.WriteLine("You are correct! Please enter your initials or name for the table of records");
+            using (StreamWriter writer = new StreamWriter(@"c:\temp\GuessNumberByHuman.txt", true))
+            {
+                writer.Write(Console.ReadLine());
+                writer.Write(" ");
+                writer.WriteLine(attempts);
+            }
+            Console.WriteLine("Thank you! Here's the table of previous participants! Number next to name shows amount of attempts left, comparing with amount required for AI to find number from the same range");
+            string[] table = File.ReadAllLines(@"c:\temp\GuessNumberByHuman.txt");
+            var orderedTable = table.OrderByDescending(x => int.Parse(x.Split(' ')[1]));
+            foreach (string line in orderedTable)
+            {
+                Console.WriteLine(line);
+            }
+        }
+        
         static void comStep(int minVal, int maxVal, int avVal)
         {
             avVal = (minVal + maxVal) / 2;
@@ -47,32 +65,26 @@ namespace GuessNumber
         }
         
         
-        static void humStep(int randomNumber)
+        static void humStep(int randomNumber, int attempts)
         {
             int guess = Input(Console.ReadLine());
-            int attempts = 1;
+            attempts--;
             while (guess != randomNumber)
             {
                 if (guess > randomNumber)
                 {
                     Console.WriteLine("Your guess is greater, try once more");
                     guess = Input(Console.ReadLine());
-                    attempts++;
+                    attempts--;
                 }
                 else
                 {
                     Console.WriteLine("Your guess is less, try once more");
                     guess = Input(Console.ReadLine());
-                    attempts++;
+                    attempts--;
                 }
             }
-            Console.WriteLine("You are correct! Please enter your initials for the table of records");
-            using (StreamWriter writer = new StreamWriter(@"c:\temp\GuessNumberByHuman.txt", true))
-            {
-                writer.Write(Console.ReadLine());
-                writer.Write(" ");
-                writer.WriteLine(attempts);
-            }
+            fromToText(attempts);
         }
         
         
@@ -93,10 +105,15 @@ namespace GuessNumber
             }
             else
             {
+                int attempts = 0;
+                while (Math.Pow(2,attempts) < maxVal)
+                {
+                    attempts++;
+                }
                 Random random = new Random();
                 maxVal = random.Next(0, maxVal);
                 Console.WriteLine("Ok, I've got number, start guessing! :)");
-                humStep(maxVal);
+                humStep(maxVal, attempts);
             }
         }
     }

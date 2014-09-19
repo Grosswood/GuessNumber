@@ -28,14 +28,15 @@ namespace GuessNumber
 //Interacting with txt file: first writes current result, then sorts table's content and shows sorted version
         {
             Console.WriteLine("You are correct! Please enter your initials or name for the table of records");
-            using (StreamWriter writer = new StreamWriter(@"c:\temp\GuessNumberByHuman.txt", true))
+            var fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GuessNumberRecords.txt");
+            using (StreamWriter writer = new StreamWriter(fileName, true))
             {
                 writer.Write(Console.ReadLine());
                 writer.Write(" ");
                 writer.WriteLine(attempts);
             }
             Console.WriteLine("Thank you! Here's the table of previous participants! Number next to name shows amount of attempts left, comparing with amount required for AI to find number from the same range");
-            string[] table = File.ReadAllLines(@"c:\temp\GuessNumberByHuman.txt");
+            string[] table = File.ReadAllLines(fileName);
             var orderedTable = table.OrderByDescending(x => int.Parse(x.Split(' ')[1]));
             foreach (string line in orderedTable)
             {
@@ -96,11 +97,16 @@ namespace GuessNumber
 //Managing settings
             Console.WriteLine("Hello! Welcome to 'Guess number' program. Enter any number if you want to guess yourself or type anything else if you want computer to guess");
             int maxVal = 0;
-            bool gameType = int.TryParse(Console.ReadLine(), out maxVal);
+            bool userGuessing = int.TryParse(Console.ReadLine(), out maxVal);
             Console.WriteLine("Please enter the desired range");
             maxVal = Input(Console.ReadLine());
+            while (maxVal <= 0)
+            {
+                Console.WriteLine("You've entered invalid data, please enter valid one");
+                maxVal = Input(Console.ReadLine());
+            }
 
-            if (gameType == false)
+            if (userGuessing == false)
 //AI is guessing
             {
                 int minVal = 0;
@@ -117,7 +123,7 @@ namespace GuessNumber
                     attempts++;
                 }
                 Random random = new Random();
-                maxVal = random.Next(0, maxVal);
+                maxVal = random.Next(1, maxVal);
                 Console.WriteLine("Ok, I've got number, start guessing! :)");
                 humStep(maxVal, attempts);
             }
